@@ -4,8 +4,10 @@
     --unitless-max-font-size: 18;
 }
 
+
 html {
     background-color: #2eec96;
+    font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
 }
 
 body {
@@ -23,12 +25,15 @@ form {
 }
 
 .container{
+
     max-width: 30rem;
     margin: 0 auto;
     padding: 1.5rem 2rem;
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    position: relative;
+    box-sizing: border-box;
 }
 
 .container h1 {
@@ -37,33 +42,38 @@ form {
     border-bottom: 1px solid var(--gray-lighter);
     font-size: var(--font-size-3);
     text-align: center;
+    font-weight: 500;
+    margin: 0 0 1em;
 }
 
 input {
     background-repeat: no-repeat;
     background-position: right 1rem center;
     background-size: 0.75rem;
+    border: 1px solid rgb(204, 204, 204);
+    padding: 0 .75em;
+    width: 100%;
+    height: 2.5em;
+    border-radius: 0.2em;
+    box-sizing: border-box;
+    font-weight: 400;
+    font-size: 16px;
+    font-family: inherit;
 }
 
-input:placeholder-shown + label {
-    opacity: 0;
-    transform: translateY(1rem);
+button {
+    height: 2.25em;
+    width: auto;
+    padding: 0 1em;
+    border: 1px solid hsl(210,100%,50%);
+    border-radius: .2em;
+    background-color: hsl(210,100%,50%);
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: 500;
+    cursor: pointer;
+    color: white;
 }
-
-.has-dynamic-label {
-    position: relative;
-    padding-top: 1.5rem;
-}
-
-.has-dynamic-label label {
-    position: absolute;
-    top: 0;
-    font-size: var(--font-size-small);
-    opacity: 1;
-    transform: translateY(0);
-    transition: all 0.2s ease-out;
-}
-
 
 .grid_parent{
     display: none;
@@ -73,6 +83,7 @@ input:placeholder-shown + label {
     grid-row-gap: 20px;
     justify-items: stretch;
     align-items: stretch;
+    padding: 1em 0;
 }
 
 .row{

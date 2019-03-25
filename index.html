@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang='en' class=''>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 
 <head>
-    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/hiq@2.6.0/dist/hiq.min.css'>
-
     <link rel='stylesheet' href='./stylesheet.css'>
 </head>
 
@@ -154,12 +154,14 @@
 
         <h1>Import Restaurant Menu</h1>
         <p>
-            <label for="optional-input">Search Restaurant Name</label>
-            <input value="" name="restInput" type="text" id="optional-input">
+            <!-- <label for="optional-input">Search Restaurant Name</label> -->
+            <input value="" name="restInput" type="text" id="optional-input" placeholder="Search Restaurant Name">
         </p>
-        <p>
-            <button onclick="restaurantSearch()">Search</button>
-        </p>
+       
+        <div id="button">
+            <button class="btn blue" onclick="restaurantSearch()">Search</button>
+        </div>
+        
 
         <div class="grid_parent" id="grid_parent">
 
