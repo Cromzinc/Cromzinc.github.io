@@ -2,21 +2,29 @@
 <html lang='en' class=''>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-
 <head>
     <link rel='stylesheet' href='./stylesheet.css'>
 </head>
 
 <body>
     <script>
-        let searchValue;
+        async function grubSearch() {
+            let searchValue = document.getElementById('optional-input').value;
+            removeRows();
+            const position = await this.requestLocation();
+            let lat = position.coords.latitude;
+            let long = position.coords.longitude;
+            let geoLoc = "Point(" + position.coords.longitude + "+" + position.coords.latitude + ")";
+            console.log(geoLoc);
 
-        async function restaurantSearch() {
-            searchValue = document.getElementById('optional-input').value;
-            console.log(searchValue);
-            grubSearch();
+            let url = 'https://us-central1-optical-psyche-137823.cloudfunctions.net/function-1?search=' + searchValue + '&geo=' + geoLoc;
 
-            //addRow();
+            fetch(url).then(function (response) {
+                return response.json();
+            }).then(function (j) {
+                console.log(j);
+                addRow(j);
+            })
         }
 
         function requestLocation() {
@@ -87,7 +95,6 @@
                         method: 'PUT',
                         body: formData, // data can be `string` or {object}!
                         headers: {
-                            // 'Content-Type': 'application/json',
                             'Access-Control-Allow-Origin': '*',
                             'Accept': 'application/json, text/plain, */*',
                             'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik1qazRSVVZEUmtaR01EVkdPRGsxTVVZMFJURTFSakJHTWpJM09FSTVOemt6TURNMU1qSXdRZyJ9.eyJpc3MiOiJodHRwczovL2ZlZWRtZS5hdXRoMC5jb20vIiwic3ViIjoiZ29vZ2xlLW9hdXRoMnwxMTI4MzIxNDA4MDk3MzgxNTEzMDkiLCJhdWQiOlsiaHR0cHM6Ly9lZmVlZC5henVyZXdlYnNpdGVzLm5ldCIsImh0dHBzOi8vZmVlZG1lLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1NTM0NDY5NTEsImV4cCI6MTU1MzUzMzM1MSwiYXpwIjoicjJGcWNONndPbmljSm00UlZHVFBKckptUEdoTjFTTlAiLCJzY29wZSI6Im9wZW5pZCBlbWFpbCBvZmZsaW5lX2FjY2VzcyJ9.Spg0o-6VqxuPCZPMjCiYYvE_bY-WGbegXg6-2ip6KIxdG7VM1vKjAg8tKvuwiyoN-UmIyBOd0QBjq6AcxjXD4cVWEWbCcW_7OG2W5RKEG_lEkdagfsdd-J0VPLp4qPlPynf7QqhnADXylpgjaCxCu7iKuvCkg_5aK_pd3e0S4LaeBvam61tOFMvc_UOQDMssCYwtK6-9D6SDJv3dJxyeeed0JcoMf_du236LRL5ygtHbnCG4tYSdTAGAWFpe4mYLmZ9OaNj6Qb1KH_-3Ri0KLFweZT9P_vLslv_BDbEWwm9BDOLxgURCSTGK3UCcMDfiM0SvsBhfX2aloVIGllop6g'
@@ -98,56 +105,31 @@
 
             restaurant.restaurant.menu_category_list.forEach(category_list => {
                 category_list.menu_item_list.forEach(menuItem => {
-                    
-                        let data = [
-                            {
-                                "Id": -1,
-                                "Name": restName,
-                                "Street": restStreet,
-                                "City": restCity,
-                                "State": restState,
-                                "Items": [
-                                    {
-                                        "Id": -1,
-                                        "Name": menuItem.name,
-                                        "Category": menuItem.menu_category_name,
-                                        "CreatedOn": date
-                                    }
-                                ]
-                            }
-                        ];
-                        makeRequest(data);
+
+                    let data = [
+                        {
+                            "Id": -1,
+                            "Name": restName,
+                            "Street": restStreet,
+                            "City": restCity,
+                            "State": restState,
+                            "Items": [
+                                {
+                                    "Id": -1,
+                                    "Name": menuItem.name,
+                                    "Category": menuItem.menu_category_name,
+                                    "CreatedOn": date
+                                }
+                            ]
+                        }
+                    ];
+                    makeRequest(data);
                 })
             })
-            // const Http = new XMLHttpRequest();
-            // const url = 'https://efeed.azurewebsites.net/api/restaurant/';
-            // Http.open("POST", url, true);
-            // Http.setRequestHeader("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik1qazRSVVZEUmtaR01EVkdPRGsxTVVZMFJURTFSakJHTWpJM09FSTVOemt6TURNMU1qSXdRZyJ9.eyJlbWFpbCI6ImNyb216aW5jQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJpc3MiOiJodHRwczovL2ZlZWRtZS5hdXRoMC5jb20vIiwic3ViIjoiZ29vZ2xlLW9hdXRoMnwxMTI4MzIxNDA4MDk3MzgxNTEzMDkiLCJhdWQiOiJyMkZxY042d09uaWNKbTRSVkdUUEpySm1QR2hOMVNOUCIsImlhdCI6MTU1MzMyMzE0NSwiZXhwIjoxNTg0ODU5MTQ1LCJhdF9oYXNoIjoiY0hLWE1qbllMemxfVW9YRTZDXzUyUSIsIm5vbmNlIjoiZDJ6LVVFSkFsdTJYQVVRYV9oTGs0UDZRemNhclptNFgifQ.hygk4B7cY5Y4y7xLZx0YOSzkDN5NajboK80vGRCFa8_eoir44K3EwdwQhyLBE4eKdi-ot8cEyoVd5OIBsj54tavPqR7tN99FvLe9Es5kKHYSioOdYtbPgUy-ZW52Aq1d1TQplfGq5CeWxTqsUz-qZpBhiYwhefxaIqhbQMoYGJL5Vq6GjC1CV3SXDbR7iUP-x3_H28-4wZZLd3zZ7GV25iDGCOQERxWaff7-JMI9SBjIXgJ-KyFFe9Z9TROSoqKnBGrRCXVEI8aEyih96-3_l8pZGGC4kS5myGYQVsdxQfR_PO3ltodMRt3xG-QE91phS2BVXgJ-YMb0R3lRy8nQbw");
-            // Http.setRequestHeader("Content-Type", "application/json");
-            // var body = JSON.stringify({ "Id": -1, "Name": element, "Street": "", "City": "", "State": "", "Phone": "", "Items": [] });
-            // Http.send(body);
-            // Http.onreadystatechange = (e) => {
-            //     console.log(Http.responseText)
-            // }
+
         }
 
-        async function grubSearch() {
-            removeRows();
-            const position = await this.requestLocation();
-            let lat = position.coords.latitude;
-            let long = position.coords.longitude;
-            let geoLoc = "Point(" + position.coords.longitude + "+" + position.coords.latitude + ")";
-            console.log(geoLoc);
 
-            let url = 'https://us-central1-optical-psyche-137823.cloudfunctions.net/function-1?search=' + searchValue + '&geo=' + geoLoc;
-
-            fetch(url).then(function (response) {
-                return response.json();
-            }).then(function (j) {
-                console.log(j);
-                addRow(j);
-            })
-        }
     </script>
 
     <div class="container" id="container">
@@ -155,17 +137,15 @@
         <h1>Import Restaurant Menu</h1>
         <p>
             <!-- <label for="optional-input">Search Restaurant Name</label> -->
-            <input value="" name="restInput" type="text" id="optional-input" placeholder="Search Restaurant Name">
+            <input value="" name="restInput" type="text" id="optional-input" autocomplete="off"
+                placeholder="Search Restaurant Name">
         </p>
-       
+
         <div id="button">
-            <button class="btn blue" onclick="restaurantSearch()">Search</button>
+            <button class="btn blue" onclick="grubSearch()">Search</button>
         </div>
-        
 
-        <div class="grid_parent" id="grid_parent">
-
-        </div>
+        <div class="grid_parent" id="grid_parent"></div>
 
     </div>
 
