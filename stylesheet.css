@@ -24,9 +24,9 @@ body {
     margin-bottom: 1.5rem;
     padding-bottom: 1rem;
     border-bottom: 1px solid var(--gray-lighter);
-    font-size: var(--font-size-3);
+    font-size: 21px;
     text-align: center;
-    font-weight: 500;
+    font-weight: 400;
     margin: 0 0 1em;
 }
 
