@@ -24,20 +24,28 @@
             </p>
 
             <div id="button">
-                <button class="btn blue" onclick="grubSearch()">Search</button>
+                <button id="searchButton" class="btn blue" onclick="grubSearch()">Search</button>
             </div>
 
             <div class="grid_parent" id="grid_parent"></div>
 
         </div>
 
-        <div id="Options" class="tabcontent"></div>
+        <div id="Options" class="tabcontent">
+            <h1>Options</h1>
+            <p>
+                <label>Auth Token</label>
+                <input value="" name="authToken" type="text" id="authToken" autocomplete="off" placeholder="Auth Token">                
+            </p>
+
+            <button id="saveButton" class="btn blue" onclick="setLocalStorage()">Save</button>
+
+        </div>
 
     </div>
     <script>
         document.getElementById("defaultOpen").click();
     </script>
-
 </body>
 
 </html>

@@ -89,6 +89,7 @@ function postMenu(restaurant) {
     makeRequest = function (data) {
         const url = 'https://efeed.azurewebsites.net/api/restaurant/';
         let formData = new FormData();
+        let authToken = localStorage.getItem("authToken");
         formData.append("restaurants", JSON.stringify(data));
         fetch(url, {
             method: 'PUT',
@@ -96,7 +97,7 @@ function postMenu(restaurant) {
             headers: {
                 'Access-Control-Allow-Origin': '*',
                 'Accept': 'application/json, text/plain, */*',
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik1qazRSVVZEUmtaR01EVkdPRGsxTVVZMFJURTFSakJHTWpJM09FSTVOemt6TURNMU1qSXdRZyJ9.eyJpc3MiOiJodHRwczovL2ZlZWRtZS5hdXRoMC5jb20vIiwic3ViIjoiZ29vZ2xlLW9hdXRoMnwxMTI4MzIxNDA4MDk3MzgxNTEzMDkiLCJhdWQiOlsiaHR0cHM6Ly9lZmVlZC5henVyZXdlYnNpdGVzLm5ldCIsImh0dHBzOi8vZmVlZG1lLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1NTM1NDM0NDQsImV4cCI6MTU1MzYyOTg0NCwiYXpwIjoicjJGcWNONndPbmljSm00UlZHVFBKckptUEdoTjFTTlAiLCJzY29wZSI6Im9wZW5pZCBlbWFpbCBvZmZsaW5lX2FjY2VzcyJ9.hAVJ1DCNIVA9FDE6tqf0eN2MtYXZInh8KzN-RiqvKV2-M0tYqQiZ7gzUk5gKBGDpVDWp7IhYTB1mbdhmoKNqR-WWHpVF5-Ro1y8uB82CWyfBBmeOyTM8n4sG7Yb_arNDTMJBDXVye48JOoB8i4Va1MfPSZnx6g1Au5EsP6BxSKbgkKdAP-IG30YjB6ByvmZXEIQxgF1UIKvyDUMwxYiiXOunO27m5XDo1fdC8SNXdlfKcMp6BoSJ66GIw_vlOdKtR-f6AXy2Zj9b773N0cva97uE_T3kPIv8X7xPYJ9LliRlPmG9u_MDsuA3yQuW1HHcadzZCMvYcQa4tZOUlkm0cA'
+                'Authorization': 'Bearer ' + authToken
             }
         });
     };
@@ -134,4 +135,35 @@ function openTab(evt, tabName) {
     document.getElementById(tabName).style.display = "block";
     evt.currentTarget.className += " active";
 }
+
+function setLocalStorage() {
+    let authToken = document.getElementById('authToken').value;
+    if (authToken) {
+        localStorage.setItem('authToken', authToken);
+    }
+}
+
+function getLocalStorage(key) {
+    let authToken = localStorage.getItem("authToken");
+    if (key == "authToken") {
+        return authToken;
+    }
+}
+
+window.onload = function () {
+    const input = document.getElementById("optional-input");
+    input.addEventListener('keyup', function (e) {
+        if (e.keyCode === 13) {
+            document.getElementById("searchButton").click();
+        }
+    });
+
+    let authToken = localStorage.getItem('authToken');
+    document.getElementById('authToken').value = authToken;
+
+    // if (authToken) {
+    // }
+
+}
+
 
