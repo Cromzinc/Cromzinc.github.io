@@ -63,7 +63,6 @@
                     document.getElementById('container').appendChild(div).setAttribute('id', 'noResults');
                 }
             }
-
         }
 
         function getRestaurentMenu(id) {
@@ -83,53 +82,49 @@
             let restStreet = restaurant.restaurant.address.street_address;
             let date = new Date().toISOString();
 
+            let restData = [
+                {
+                    "Id": -1,
+                    "Name": restName,
+                    "Street": restStreet,
+                    "City": restCity,
+                    "State": restState,
+                    "Items": []
+                }
+            ];
 
-            var makeRequest, promises = [];
+            var makeRequest;
 
             makeRequest = function (data) {
                 const url = 'https://efeed.azurewebsites.net/api/restaurant/';
                 let formData = new FormData();
                 formData.append("restaurants", JSON.stringify(data));
-                promises.push(
-                    fetch(url, {
-                        method: 'PUT',
-                        body: formData, // data can be `string` or {object}!
-                        headers: {
-                            'Access-Control-Allow-Origin': '*',
-                            'Accept': 'application/json, text/plain, */*',
-                            'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik1qazRSVVZEUmtaR01EVkdPRGsxTVVZMFJURTFSakJHTWpJM09FSTVOemt6TURNMU1qSXdRZyJ9.eyJpc3MiOiJodHRwczovL2ZlZWRtZS5hdXRoMC5jb20vIiwic3ViIjoiZ29vZ2xlLW9hdXRoMnwxMTI4MzIxNDA4MDk3MzgxNTEzMDkiLCJhdWQiOlsiaHR0cHM6Ly9lZmVlZC5henVyZXdlYnNpdGVzLm5ldCIsImh0dHBzOi8vZmVlZG1lLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1NTM0NDY5NTEsImV4cCI6MTU1MzUzMzM1MSwiYXpwIjoicjJGcWNONndPbmljSm00UlZHVFBKckptUEdoTjFTTlAiLCJzY29wZSI6Im9wZW5pZCBlbWFpbCBvZmZsaW5lX2FjY2VzcyJ9.Spg0o-6VqxuPCZPMjCiYYvE_bY-WGbegXg6-2ip6KIxdG7VM1vKjAg8tKvuwiyoN-UmIyBOd0QBjq6AcxjXD4cVWEWbCcW_7OG2W5RKEG_lEkdagfsdd-J0VPLp4qPlPynf7QqhnADXylpgjaCxCu7iKuvCkg_5aK_pd3e0S4LaeBvam61tOFMvc_UOQDMssCYwtK6-9D6SDJv3dJxyeeed0JcoMf_du236LRL5ygtHbnCG4tYSdTAGAWFpe4mYLmZ9OaNj6Qb1KH_-3Ri0KLFweZT9P_vLslv_BDbEWwm9BDOLxgURCSTGK3UCcMDfiM0SvsBhfX2aloVIGllop6g'
-                        }
-                    })
-                );
+                fetch(url, {
+                    method: 'PUT',
+                    body: formData, // data can be `string` or {object}!
+                    headers: {
+                        'Access-Control-Allow-Origin': '*',
+                        'Accept': 'application/json, text/plain, */*',
+                        'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik1qazRSVVZEUmtaR01EVkdPRGsxTVVZMFJURTFSakJHTWpJM09FSTVOemt6TURNMU1qSXdRZyJ9.eyJpc3MiOiJodHRwczovL2ZlZWRtZS5hdXRoMC5jb20vIiwic3ViIjoiZ29vZ2xlLW9hdXRoMnwxMTI4MzIxNDA4MDk3MzgxNTEzMDkiLCJhdWQiOlsiaHR0cHM6Ly9lZmVlZC5henVyZXdlYnNpdGVzLm5ldCIsImh0dHBzOi8vZmVlZG1lLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1NTM1NDM0NDQsImV4cCI6MTU1MzYyOTg0NCwiYXpwIjoicjJGcWNONndPbmljSm00UlZHVFBKckptUEdoTjFTTlAiLCJzY29wZSI6Im9wZW5pZCBlbWFpbCBvZmZsaW5lX2FjY2VzcyJ9.hAVJ1DCNIVA9FDE6tqf0eN2MtYXZInh8KzN-RiqvKV2-M0tYqQiZ7gzUk5gKBGDpVDWp7IhYTB1mbdhmoKNqR-WWHpVF5-Ro1y8uB82CWyfBBmeOyTM8n4sG7Yb_arNDTMJBDXVye48JOoB8i4Va1MfPSZnx6g1Au5EsP6BxSKbgkKdAP-IG30YjB6ByvmZXEIQxgF1UIKvyDUMwxYiiXOunO27m5XDo1fdC8SNXdlfKcMp6BoSJ66GIw_vlOdKtR-f6AXy2Zj9b773N0cva97uE_T3kPIv8X7xPYJ9LliRlPmG9u_MDsuA3yQuW1HHcadzZCMvYcQa4tZOUlkm0cA'
+                    }
+                });
             };
 
             restaurant.restaurant.menu_category_list.forEach(category_list => {
                 category_list.menu_item_list.forEach(menuItem => {
-
-                    let data = [
+                    let menuData = 
                         {
                             "Id": -1,
-                            "Name": restName,
-                            "Street": restStreet,
-                            "City": restCity,
-                            "State": restState,
-                            "Items": [
-                                {
-                                    "Id": -1,
-                                    "Name": menuItem.name,
-                                    "Category": menuItem.menu_category_name,
-                                    "CreatedOn": date
-                                }
-                            ]
-                        }
-                    ];
-                    makeRequest(data);
+                            "Name": menuItem.name,
+                            "Category": menuItem.menu_category_name,
+                            "CreatedOn": date
+                        };
+                    restData[0].Items.push(menuData);
                 })
             })
-
+            console.log(restData);
+            makeRequest(restData);
         }
-
-
     </script>
 
     <div class="container" id="container">
