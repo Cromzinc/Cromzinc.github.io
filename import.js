@@ -1,6 +1,8 @@
 
 async function grubSearch() {
     let searchValue = document.getElementById('optional-input').value;
+    let searchRadius = localStorage.getItem('searchRadius') || "10";
+    let searchCount = localStorage.getItem('searchCount') || "5";
     removeRows();
     const position = await this.requestLocation();
     let lat = position.coords.latitude;
@@ -8,7 +10,7 @@ async function grubSearch() {
     let geoLoc = "Point(" + position.coords.longitude + "+" + position.coords.latitude + ")";
     console.log(geoLoc);
 
-    let url = 'https://us-central1-optical-psyche-137823.cloudfunctions.net/function-1?search=' + searchValue + '&geo=' + geoLoc;
+    let url = 'https://us-central1-optical-psyche-137823.cloudfunctions.net/function-1?search=' + searchValue + '&geo=' + geoLoc + '&searchRadius=' + searchRadius + '&searchCount=' + searchCount;
 
     fetch(url).then(function (response) {
         return response.json();
@@ -141,13 +143,15 @@ function setLocalStorage() {
     if (authToken) {
         localStorage.setItem('authToken', authToken);
     }
-}
+    // let searchRadius = document.getElementById('searchRadius').value;
+    // if (searchRadius) {
+    //     localStorage.setItem('searchRadius', searchRadius);
+    // }
+    let searchRadius = document.getElementById('searchRadius').value;
+    searchRadius ? localStorage.setItem('searchRadius', searchRadius) : localStorage.removeItem('searchRadius');
 
-function getLocalStorage(key) {
-    let authToken = localStorage.getItem("authToken");
-    if (key == "authToken") {
-        return authToken;
-    }
+    let searchCount = document.getElementById('searchCount').value;
+    searchCount ? localStorage.setItem('searchCount', searchCount) : localStorage.removeItem('searchCount');
 }
 
 window.onload = function () {
@@ -161,8 +165,12 @@ window.onload = function () {
     let authToken = localStorage.getItem('authToken');
     document.getElementById('authToken').value = authToken;
 
-    // if (authToken) {
-    // }
+    let searchRadius = localStorage.getItem('searchRadius');
+    document.getElementById('searchRadius').value = searchRadius;
+
+    let searchCount = localStorage.getItem('searchCount');
+    document.getElementById('searchCount').value = searchCount;
+
 
 }
 
