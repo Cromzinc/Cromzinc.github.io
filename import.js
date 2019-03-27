@@ -39,7 +39,13 @@ function removeRows() {
 
 function addRow(name) {
     let noResults = document.getElementById("noResults");
-    noResults ? container.removeChild(noResults) : null;
+    let noAuth = document.getElementById("noAuth");
+    let importResponseMsg = document.getElementById("importResponseMsg");
+
+    importResponseMsg ? Search.removeChild(importResponseMsg) : null;
+    noResults ? Search.removeChild(noResults) : null;
+    noAuth ? Search.removeChild(noAuth) : null;
+
     if (name.length > 0) {
         name.forEach(item => {
             var div = document.createElement('div');
@@ -51,21 +57,32 @@ function addRow(name) {
         document.getElementById('grid_parent').style.display = "block"
     } else {
         if (!container.noResults) {
-            var div = document.createElement('h1');
+            var div = document.createElement('h2');
             div.innerText = "No results found.";
-            document.getElementById('container').appendChild(div).setAttribute('id', 'noResults');
+            div.className = "tabcontent";
+            document.getElementById('Search').appendChild(div).setAttribute('id', 'noResults');
         }
     }
 }
 
 function getRestaurentMenu(id) {
     let url = 'https://us-central1-optical-psyche-137823.cloudfunctions.net/function-1?rest_id=' + id;
-    fetch(url).then(function (response) {
-        return response.json();
-    }).then(function (j) {
-        postMenu(j);
-        console.log(j);
-    })
+
+    if(localStorage.getItem("authToken")){
+        fetch(url).then(function (response) {
+            return response.json();
+        }).then(function (j) {
+            postMenu(j);
+            console.log(j);
+        })
+    } else{
+        removeRows();
+        var div = document.createElement('h2');
+        div.innerText = "You must enter an auth token to import menu.";
+        div.className = "tabcontent";
+        document.getElementById('Search').appendChild(div).setAttribute('id', 'noAuth');
+    }
+
 }
 
 function postMenu(restaurant) {
@@ -101,7 +118,20 @@ function postMenu(restaurant) {
                 'Accept': 'application/json, text/plain, */*',
                 'Authorization': 'Bearer ' + authToken
             }
-        });
+        }).then(res => {
+            removeRows();
+            if (res.ok) {
+                var div = document.createElement('h2');
+                div.innerText = "Menu items successfully imported!";
+                div.className = "tabcontent";
+                document.getElementById('Search').appendChild(div).setAttribute('id', 'importResponseMsg');
+            } else {
+                var div = document.createElement('h2');
+                div.innerText = "Importing menu items failed :(";
+                div.className = "tabcontent";
+                document.getElementById('Search').appendChild(div).setAttribute('id', 'importResponseMsg');
+            }
+          })
     };
 
     restaurant.restaurant.menu_category_list.forEach(category_list => {
@@ -140,13 +170,8 @@ function openTab(evt, tabName) {
 
 function setLocalStorage() {
     let authToken = document.getElementById('authToken').value;
-    if (authToken) {
-        localStorage.setItem('authToken', authToken);
-    }
-    // let searchRadius = document.getElementById('searchRadius').value;
-    // if (searchRadius) {
-    //     localStorage.setItem('searchRadius', searchRadius);
-    // }
+    authToken ? localStorage.setItem('authToken', authToken) : localStorage.removeItem('authToken');
+
     let searchRadius = document.getElementById('searchRadius').value;
     searchRadius ? localStorage.setItem('searchRadius', searchRadius) : localStorage.removeItem('searchRadius');
 
