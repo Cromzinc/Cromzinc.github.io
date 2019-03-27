@@ -66,6 +66,7 @@ function addRow(name) {
 }
 
 function getRestaurentMenu(id) {
+    removeRows();
     let url = 'https://us-central1-optical-psyche-137823.cloudfunctions.net/function-1?rest_id=' + id;
 
     if(localStorage.getItem("authToken")){
@@ -76,7 +77,6 @@ function getRestaurentMenu(id) {
             console.log(j);
         })
     } else{
-        removeRows();
         var div = document.createElement('h2');
         div.innerText = "You must enter an auth token to import menu.";
         div.className = "tabcontent";
