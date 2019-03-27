@@ -4,20 +4,33 @@ async function grubSearch() {
     let searchRadius = localStorage.getItem('searchRadius') || "10";
     let searchCount = localStorage.getItem('searchCount') || "5";
     removeRows();
+    message(false);
     const position = await this.requestLocation();
-    let lat = position.coords.latitude;
-    let long = position.coords.longitude;
     let geoLoc = "Point(" + position.coords.longitude + "+" + position.coords.latitude + ")";
     console.log(geoLoc);
 
     let url = 'https://us-central1-optical-psyche-137823.cloudfunctions.net/function-1?search=' + searchValue + '&geo=' + geoLoc + '&searchRadius=' + searchRadius + '&searchCount=' + searchCount;
 
+    spinner(true);
+
     fetch(url).then(function (response) {
         return response.json();
     }).then(function (j) {
+        spinner(false);
         console.log(j);
         addRow(j);
     })
+}
+
+function spinner(toggle){
+    let spinner = document.getElementById("spinner");
+    toggle ? spinner.style.display = "inline-block" : spinner.style.display = "none";
+}
+
+function message(toggle, message){
+    let messageElement = document.getElementById("message");
+    toggle ? messageElement.innerText = message : messageElement.innerText = "";
+    toggle ? messageElement.style.display = "block" : messageElement.style.display = "none";
 }
 
 function requestLocation() {
@@ -32,6 +45,7 @@ function requestLocation() {
 }
 
 function removeRows() {
+    grid_parent.style.display = "none";
     while (grid_parent.firstChild) {
         grid_parent.removeChild(grid_parent.firstChild);
     }
@@ -57,19 +71,18 @@ function addRow(name) {
         document.getElementById('grid_parent').style.display = "block"
     } else {
         if (!container.noResults) {
-            var div = document.createElement('h2');
-            div.innerText = "No results found.";
-            div.className = "tabcontent";
-            document.getElementById('Search').appendChild(div).setAttribute('id', 'noResults');
+            message(true, "No results found.");
         }
     }
 }
 
 function getRestaurentMenu(id) {
     removeRows();
+    
     let url = 'https://us-central1-optical-psyche-137823.cloudfunctions.net/function-1?rest_id=' + id;
 
     if(localStorage.getItem("authToken")){
+        spinner(true);
         fetch(url).then(function (response) {
             return response.json();
         }).then(function (j) {
@@ -77,10 +90,7 @@ function getRestaurentMenu(id) {
             console.log(j);
         })
     } else{
-        var div = document.createElement('h2');
-        div.innerText = "You must enter an auth token to import menu.";
-        div.className = "tabcontent";
-        document.getElementById('Search').appendChild(div).setAttribute('id', 'noAuth');
+        message(true, "You must enter an auth token to import menu.");
     }
 
 }
@@ -120,16 +130,11 @@ function postMenu(restaurant) {
             }
         }).then(res => {
             removeRows();
+            spinner(false);
             if (res.ok) {
-                var div = document.createElement('h2');
-                div.innerText = "Menu items successfully imported!";
-                div.className = "tabcontent";
-                document.getElementById('Search').appendChild(div).setAttribute('id', 'importResponseMsg');
+                message(true, "Menu items successfully imported!");
             } else {
-                var div = document.createElement('h2');
-                div.innerText = "Importing menu items failed :(";
-                div.className = "tabcontent";
-                document.getElementById('Search').appendChild(div).setAttribute('id', 'importResponseMsg');
+                message(true, "Importing menu items failed :(");
             }
           })
     };
