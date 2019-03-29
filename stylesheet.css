@@ -131,6 +131,12 @@ button {
       display: block;
       margin-bottom: .3em;
   }
+
+  .message {
+    -webkit-animation: fadeEffect 1.5s;
+    animation: fadeEffect 1.5s;
+    font-weight: 300;
+  }
   
   @-webkit-keyframes fadeEffect {
     from {opacity: 0;}

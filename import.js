@@ -1,10 +1,9 @@
-
 async function grubSearch() {
     let searchValue = document.getElementById('optional-input').value;
     let searchRadius = localStorage.getItem('searchRadius') || "10";
     let searchCount = localStorage.getItem('searchCount') || "5";
     removeRows();
-    message(false);
+    message(true, "Searching for restaurant");
     const position = await this.requestLocation();
     let geoLoc = "Point(" + position.coords.longitude + "+" + position.coords.latitude + ")";
     console.log(geoLoc);
@@ -17,19 +16,20 @@ async function grubSearch() {
         return response.json();
     }).then(function (j) {
         spinner(false);
+        message(false);
         console.log(j);
         addRow(j);
     })
 }
 
-function spinner(toggle){
+function spinner(toggle) {
     let spinner = document.getElementById("spinner");
     toggle ? spinner.style.display = "inline-block" : spinner.style.display = "none";
 }
 
-function message(toggle, message){
+function message(toggle, message) {
     let messageElement = document.getElementById("message");
-    toggle ? messageElement.innerText = message : messageElement.innerText = "";
+    toggle ? messageElement.innerHTML = message : messageElement.innerText = "";
     toggle ? messageElement.style.display = "block" : messageElement.style.display = "none";
 }
 
@@ -61,14 +61,15 @@ function addRow(name) {
     noAuth ? Search.removeChild(noAuth) : null;
 
     if (name.length > 0) {
+        let grid_parent = document.getElementById('grid_parent');
         name.forEach(item => {
             var div = document.createElement('div');
             div.className = 'row';
             div.innerHTML = item.name;
 
-            document.getElementById('grid_parent').appendChild(div).setAttribute('onclick', `getRestaurentMenu(${item.restaurant_id})`);
+            grid_parent.appendChild(div).setAttribute('onclick', `getRestaurentMenu(${item.restaurant_id}, '${item.name}')`);
         });
-        document.getElementById('grid_parent').style.display = "block"
+        grid_parent.style.display = "block"
     } else {
         if (!container.noResults) {
             message(true, "No results found.");
@@ -76,20 +77,21 @@ function addRow(name) {
     }
 }
 
-function getRestaurentMenu(id) {
+function getRestaurentMenu(id, name) {
     removeRows();
-    
+
     let url = 'https://us-central1-optical-psyche-137823.cloudfunctions.net/function-1?rest_id=' + id;
 
-    if(localStorage.getItem("authToken")){
+    if (localStorage.getItem("authToken")) {
         spinner(true);
+        message(true, `Retrieving menu items for <b>${name}</b>`);
         fetch(url).then(function (response) {
             return response.json();
         }).then(function (j) {
             postMenu(j);
             console.log(j);
         })
-    } else{
+    } else {
         message(true, "You must enter an auth token to import menu.");
     }
 
@@ -120,6 +122,8 @@ function postMenu(restaurant) {
         let formData = new FormData();
         let authToken = localStorage.getItem("authToken");
         formData.append("restaurants", JSON.stringify(data));
+        //message(false);
+        message(true, `Importing menu items for <b>${restName}</b>`);
         fetch(url, {
             method: 'PUT',
             body: formData, // data can be `string` or {object}!
@@ -132,11 +136,11 @@ function postMenu(restaurant) {
             removeRows();
             spinner(false);
             if (res.ok) {
-                message(true, "Menu items successfully imported!");
+                message(true, `<b>${restName}</b> menu items were successfully imported!`);
             } else {
-                message(true, "Importing menu items failed :(");
+                message(true, `Importing <b>${restName}</b> menu items failed :(`);
             }
-          })
+        })
     };
 
     restaurant.restaurant.menu_category_list.forEach(category_list => {
@@ -203,5 +207,3 @@ window.onload = function () {
 
 
 }
-
-

@@ -26,11 +26,18 @@
             <div id="button">
                 <button id="searchButton" class="btn blue" onclick="grubSearch()">Search</button>
             </div>
-            <div style="text-align: center">
-            <div class="lds-ellipsis" id="spinner"><div></div><div></div><div></div><div></div></div>
-        </div>
 
-            <h2 class="tabcontent" id="message"></h2>
+            <h2 class="message" id="message"></h2>
+
+            <div style="text-align: center">
+                <div class="lds-ellipsis" id="spinner">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+
             <div class="grid_parent tabcontent" id="grid_parent"></div>
 
         </div>
@@ -39,17 +46,19 @@
             <h1>Options</h1>
             <p>
                 <label>Auth Token</label>
-                <input value="" name="authToken" type="text" id="authToken" autocomplete="off">                
+                <input value="" name="authToken" type="text" id="authToken" autocomplete="off">
             </p>
 
             <p>
-                    <label>Search Radius (Miles)</label>
-                    <input value="" name="searchRadius" type="text" id="searchRadius" autocomplete="off" placeholder="Default is 10 Miles"> 
+                <label>Search Radius (Miles)</label>
+                <input value="" name="searchRadius" type="text" id="searchRadius" autocomplete="off"
+                    placeholder="Default is 10 Miles">
             </p>
 
             <p>
-                    <label>Number of Search Results</label>
-                    <input value="" name="searchCount" type="text" id="searchCount" autocomplete="off" placeholder="Default is 5" >
+                <label>Number of Search Results</label>
+                <input value="" name="searchCount" type="text" id="searchCount" autocomplete="off"
+                    placeholder="Default is 5">
             </p>
 
             <button id="saveButton" class="btn blue" onclick="setLocalStorage()">Save</button>
